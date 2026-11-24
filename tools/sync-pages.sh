@@ -4,6 +4,11 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+export GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-CYBER AQUA}"
+export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-cyber-aqua@users.noreply.github.com}"
+export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+
 TREE=$(git rev-parse HEAD:www)
 MSG="pages: 同步 www 快照 $(date +%Y-%m-%d_%H:%M)"
 C=$(git commit-tree "$TREE" -m "$MSG")
