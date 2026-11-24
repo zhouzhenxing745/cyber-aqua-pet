@@ -11,7 +11,13 @@ export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 
 TREE=$(git rev-parse HEAD:www)
 MSG="pages: 同步 www 快照 $(date +%Y-%m-%d_%H:%M)"
-C=$(git commit-tree "$TREE" -m "$MSG")
+git fetch -q origin pages 2>/dev/null || true
+P=$(git rev-parse --verify -q origin/pages || true)
+if [ -n "$P" ]; then
+  C=$(git commit-tree "$TREE" -p "$P" -m "$MSG")
+else
+  C=$(git commit-tree "$TREE" -m "$MSG")
+fi
 GH=$(command -v gh || true)
 if [ -n "$GH" ]; then
   git -c credential.helper="!\"$GH\" auth git-credential" push origin "$C":refs/heads/pages
