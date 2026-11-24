@@ -17,6 +17,7 @@ www/                  Web 应用本体（PWA 壳 + 全部源码与资源）
 package.json          Capacitor 依赖与脚本
 capacitor.config.json iOS 原生壳配置（webDir = www）
 tools/build-ios.sh    macOS 一键生成 .ipa
+tools/sync-pages.sh   把 www/ 快照推送到 pages 分支（刷新永久网址）
 tools/pngresize.py    图标尺寸生成脚本
 .github/workflows/ios-build.yml   无 Mac 云编译 IPA（GitHub Actions）
 .github/workflows/pages.yml       push 到 main 自动部署 www/ 到 GitHub Pages（永久 https 网址）
@@ -36,11 +37,14 @@ npm run serve          # 或: python -m http.server 8765 --directory www
 
 ### 方式 A · PWA（无需 Mac，推荐先体验）
 
-1. 将 `www/` 目录部署到任意 **HTTPS** 静态托管（GitHub Pages / Netlify / Vercel / Cloudflare Pages 均可）。
+**本项目已部署的永久网址：<https://zhouzhenxing745.github.io/cyber-aqua-pet/>**
+（GitHub Pages，`pages` 分支 = `www/` 根目录快照；更新代码后执行 `bash tools/sync-pages.sh` 重新发布。）
+
+1. iPhone Safari 打开上面的网址 → 分享按钮 → **添加到主屏幕** → 右上角“添加”。
+2. 主屏幕图标启动后为全屏独立应用，离线可玩（进度保存在本机 localStorage）。
+3. 想部署到自己的账号：将 `www/` 目录部署到任意 **HTTPS** 静态托管（GitHub Pages / Netlify / Vercel / Cloudflare Pages 均可）。
    Service Worker 与"添加到主屏幕"要求安全上下文（https 或 localhost）。
    临时体验可用免账号隧道：`npx --yes cloudflared tunnel --url http://127.0.0.1:8765`。
-2. iPhone Safari 打开该地址 → 分享按钮 → **添加到主屏幕**。
-3. 主屏幕图标启动后为全屏独立应用，离线可玩（进度保存在本机 localStorage）。
 
 局域网临时体验：`python -m http.server 8765 --directory www` 后 iPhone 访问 `http://<电脑IP>:8765`，
 可正常游玩，但 http 环境下不会注册 Service Worker（无离线缓存、不能添加主屏幕）。
