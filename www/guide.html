@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#030d15">
+<meta name="description" content="CYBER AQUA 水族宠物机 · iPhone 安装运行教程：PWA 免电脑安装、无 Mac 云编译 IPA、Mac 原生签名三条路线。">
+<title>装到 iPhone · CYBER AQUA 安装教程</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-1024.png">
+<style>
+:root{
+  --abyss:#030d15; --deep:#061826; --surface:#0a2233; --surface2:#0d2c40; --line:#16405a;
+  --cyan:#35e0ff; --cyan-d:#19b8d8; --aqua:#46f0b0; --amber:#ffb347; --coral:#ff5d73;
+  --violet:#b06bff; --sand:#e8dcc8; --ink:#d7ecf5; --mut:#8fb3c4; --dim:#5d8296;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,"Courier New",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;
+  --top:58px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--top) + 66px)}
+body{
+  font-family:var(--sans); background:var(--abyss); color:var(--ink);
+  -webkit-font-smoothing:antialiased; line-height:1.65; overflow-x:hidden;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+::selection{background:rgba(53,224,255,.32)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--deep)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--cyan-d),#0f6f86);border-radius:8px;border:2px solid var(--deep)}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--cyan),var(--cyan-d))}
+*{scrollbar-width:thin;scrollbar-color:var(--cyan-d) var(--deep)}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+kbd,.kbd{font-family:var(--mono);font-size:.86em;background:#0f3348;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 7px;color:var(--sand);white-space:nowrap}
+
+/* ---------- ambient ---------- */
+.ambient{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none;
+  background:
+    radial-gradient(1100px 620px at 82% -10%, rgba(25,184,216,.20), transparent 62%),
+    radial-gradient(900px 560px at -12% 22%, rgba(70,240,176,.10), transparent 60%),
+    radial-gradient(1000px 700px at 55% 118%, rgba(176,107,255,.14), transparent 62%),
+    linear-gradient(180deg,#04121d 0%, var(--abyss) 46%, #020a11 100%);
+}
+.ambient::before{content:"";position:absolute;inset:-20%;
+  background:
+    repeating-radial-gradient(circle at 30% 20%, rgba(53,224,255,.055) 0 2px, transparent 2px 90px),
+    repeating-radial-gradient(circle at 74% 68%, rgba(70,240,176,.045) 0 2px, transparent 2px 120px);
+  animation:caustic 26s linear infinite; opacity:.9;
+}
+.ambient::after{content:"";position:absolute;inset:0;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");}
+@keyframes caustic{0%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(2.5%,1.8%,0) rotate(1.2deg)}100%{transform:translate3d(0,0,0) rotate(0deg)}}
+.bub{position:fixed;bottom:-40px;border-radius:50%;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 32% 30%, rgba(215,236,245,.5), rgba(53,224,255,.12) 46%, transparent 70%);
+  border:1px solid rgba(53,224,255,.22); animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0}8%{opacity:.7}92%{opacity:.5}100%{transform:translateY(-108vh) translateX(26px);opacity:0}}
+
+/* ---------- top bar ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top);z-index:40;display:flex;align-items:center;gap:12px;
+  padding:0 max(14px, env(safe-area-inset-left)) 0 max(14px, env(safe-area-inset-right));
+  background:rgba(4,16,25,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.06em;font-size:14px;color:var(--sand)}
+.brand svg{width:26px;height:26px;flex:none;filter:drop-shadow(0 0 6px rgba(53,224,255,.55))}
+.brand small{display:block;font-size:10px;letter-spacing:.24em;color:var(--dim);font-weight:600}
+.topbar .sp{flex:1}
+.pill{font-family:var(--mono);font-size:11px;color:var(--aqua);border:1px solid rgba(70,240,176,.4);
+  background:rgba(70,240,176,.08);border-radius:99px;padding:3px 10px;white-space:nowrap}
+.open-app{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#04222b;
+  background:linear-gradient(135deg,var(--cyan),var(--aqua));border-radius:99px;padding:7px 14px;white-space:nowrap;
+  box-shadow:0 4px 18px rgba(53,224,255,.35);}
+.open-app:hover{text-decoration:none;filter:brightness(1.1)}
+#scrollbar{position:fixed;top:var(--top);left:0;height:2px;width:0;z-index:41;
+  background:linear-gradient(90deg,var(--cyan),var(--aqua),var(--violet));box-shadow:0 0 10px rgba(53,224,255,.7)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:980px;margin:0 auto;padding:calc(var(--top) + 30px) 18px 70px}
+.hero{padding:26px 0 8px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--cyan);text-transform:uppercase}
+h1{font-size:clamp(30px,6.4vw,52px);line-height:1.14;font-weight:900;letter-spacing:-.01em;margin:10px 0 12px;
+  background:linear-gradient(100deg,var(--sand) 8%,var(--cyan) 46%,var(--aqua) 78%,var(--violet) 108%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.lede{color:var(--mut);font-size:15px;max-width:64ch}
+.lede b{color:var(--ink)}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink);
+  border:1px solid var(--line);background:rgba(10,34,51,.7);border-radius:99px;padding:5px 12px}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px currentColor;font-style:normal}
+.chip.g i{background:var(--aqua)} .chip.a i{background:var(--amber)} .chip.v i{background:var(--violet)}
+.device{margin:20px 0 6px;display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(70,240,176,.42);
+  background:linear-gradient(120deg,rgba(70,240,176,.12),rgba(53,224,255,.06));border-radius:14px;padding:13px 15px;font-size:13.5px}
+.device svg{width:22px;height:22px;flex:none;margin-top:2px;color:var(--aqua)}
+.device b{color:var(--aqua)}
+.device .go{margin-left:auto;align-self:center;flex:none;font-size:12.5px;font-weight:700;color:#04222b;background:var(--aqua);border-radius:99px;padding:6px 13px}
+.device .go:hover{text-decoration:none;filter:brightness(1.08)}
+
+/* ---------- tabs ---------- */
+.tabs{position:sticky;top:var(--top);z-index:30;margin:26px -18px 22px;padding:10px 18px;
+  background:rgba(4,16,25,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  display:flex;gap:8px;overflow-x:auto;}
+.tab{flex:none;display:flex;align-items:center;gap:9px;border:1px solid var(--line);cursor:pointer;
+  background:var(--surface);color:var(--mut);border-radius:12px;padding:9px 15px;font-family:var(--sans);
+  font-size:13.5px;font-weight:700;transition:all .22s;}
+.tab .no{font-family:var(--mono);font-size:11px;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;
+  background:#0f3348;color:var(--cyan);flex:none}
+.tab small{display:block;font-size:10.5px;font-weight:500;color:var(--dim);letter-spacing:.02em}
+.tab:hover{border-color:var(--cyan-d);color:var(--ink)}
+.tab[aria-selected="true"]{color:#04222b;background:linear-gradient(135deg,var(--cyan),#7ff0d2);border-color:transparent;
+  box-shadow:0 6px 22px rgba(53,224,255,.3)}
+.tab[aria-selected="true"] .no{background:rgba(4,34,43,.18);color:#04222b}
+.tab[aria-selected="true"] small{color:rgba(4,34,43,.72)}
+.tab .done{font-family:var(--mono);font-size:10.5px;color:var(--aqua)}
+.tab[aria-selected="true"] .done{color:#04222b}
+
+/* ---------- panels & steps ---------- */
+.panel{display:none}
+.panel.on{display:block;animation:panelIn .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.panel-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin:6px 0 4px}
+.panel-head h2{font-size:clamp(21px,4vw,28px);font-weight:850;color:var(--sand)}
+.panel-head .tagline{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--dim)}
+.panel-intro{color:var(--mut);font-size:14px;margin-bottom:14px;max-width:70ch}
+.req{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.req .chip{font-size:11.5px}
+.prog{display:flex;align-items:center;gap:10px;margin:0 0 18px;font-size:12px;color:var(--mut)}
+.prog .bar{flex:1;height:6px;border-radius:99px;background:#0c2a3c;overflow:hidden;border:1px solid var(--line)}
+.prog .bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--aqua));transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.prog b{font-family:var(--mono);color:var(--aqua);font-weight:600}
+
+.step{position:relative;display:flex;gap:14px;border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(160deg,rgba(13,44,64,.72),rgba(8,26,39,.72));padding:16px 16px 16px 14px;margin-bottom:14px;
+  transition:border-color .25s, box-shadow .25s, transform .25s;}
+.step:hover{border-color:#1f5878;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.step.done{border-color:rgba(70,240,176,.45)}
+.step.done .s-title{color:var(--aqua)}
+.check{flex:none;width:26px;height:26px;margin-top:2px;position:relative;cursor:pointer}
+.check input{position:absolute;inset:0;opacity:0;cursor:pointer;margin:0}
+.check .box{position:absolute;inset:0;border-radius:8px;border:2px solid var(--cyan-d);background:rgba(53,224,255,.06);
+  display:grid;place-items:center;transition:all .2s;pointer-events:none}
+.check .box svg{width:15px;height:15px;color:#04222b;opacity:0;transform:scale(.4);transition:all .2s}
+.check input:checked + .box{background:linear-gradient(135deg,var(--cyan),var(--aqua));border-color:transparent}
+.check input:checked + .box svg{opacity:1;transform:scale(1)}
+.check input:focus-visible + .box{outline:2px solid var(--sand);outline-offset:2px}
+.s-body{flex:1;min-width:0}
+.s-title{font-size:15.5px;font-weight:800;color:var(--ink);display:flex;align-items:baseline;gap:8px}
+.s-title .idx{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.1em}
+.s-body p{font-size:13.8px;color:var(--mut);margin-top:6px}
+.s-body p b,.s-body p strong{color:var(--ink)}
+.s-body ul{margin:8px 0 0 18px;font-size:13.5px;color:var(--mut)}
+.s-body li{margin:4px 0}
+.s-body li b{color:var(--ink)}
+
+.cmd{position:relative;margin:11px 0 4px;border:1px solid var(--line);border-radius:12px;background:#04141f;overflow:hidden}
+.cmd .cmd-head{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #0d2c40;background:#071c2b}
+.cmd .cmd-head .dots{display:flex;gap:5px}
+.cmd .cmd-head .dots i{width:8px;height:8px;border-radius:50%;background:#123c52}
+.cmd .cmd-head .dots i:first-child{background:var(--coral)} .cmd .cmd-head .dots i:nth-child(2){background:var(--amber)} .cmd .cmd-head .dots i:last-child{background:var(--aqua)}
+.cmd .cmd-head span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--dim)}
+.copy{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--cyan);background:rgba(53,224,255,.1);
+  border:1px solid rgba(53,224,255,.35);border-radius:7px;padding:3px 10px;cursor:pointer;transition:all .2s}
+.copy:hover{background:rgba(53,224,255,.22)}
+.copy.ok{color:#04222b;background:var(--aqua);border-color:transparent}
+.cmd pre{padding:11px 13px;overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.75;color:#bfe6f2;white-space:pre}
+.cmd pre .c{color:var(--dim)} .cmd pre .p{color:var(--aqua)} .cmd pre .v{color:var(--amber)}
+
+.note{display:flex;gap:10px;margin:12px 0 2px;border-radius:12px;padding:11px 13px;font-size:13px;border:1px solid}
+.note svg{width:17px;height:17px;flex:none;margin-top:2px}
+.note.tip{border-color:rgba(53,224,255,.35);background:rgba(53,224,255,.07);color:#a9dcEC}
+.note.tip svg{color:var(--cyan)}
+.note.warn{border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08);color:#ffd9a3}
+.note.warn svg{color:var(--amber)}
+.note.bad{border-color:rgba(255,93,115,.42);background:rgba(255,93,115,.08);color:#ffc2cb}
+.note.bad svg{color:var(--coral)}
+.note b{color:inherit}
+
+/* ---------- mocks ---------- */
+.mock-row{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 4px;align-items:flex-start}
+.phone{flex:none;width:236px;border:1px solid var(--line);border-radius:22px;background:#04141f;padding:10px;
+  box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.phone .scr{border-radius:14px;background:linear-gradient(180deg,#0a2233,#061826);overflow:hidden;border:1px solid #0d2c40}
+.phone .url{display:flex;align-items:center;gap:7px;padding:8px 10px;font-size:10.5px;color:var(--mut);background:#071c2b;border-bottom:1px solid #0d2c40}
+.phone .url .lock{color:var(--aqua)}
+.share-sheet{padding:8px}
+.share-sheet .sh-top{display:flex;align-items:center;gap:8px;padding:6px 6px 9px;border-bottom:1px solid #0d2c40}
+.share-sheet .sh-top .fav{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--cyan-d),#0f6f86);display:grid;place-items:center;flex:none}
+.share-sheet .sh-top .fav svg{width:15px;height:15px;color:#eafcff}
+.share-sheet .sh-top .t{font-size:10.5px;color:var(--ink);font-weight:700;line-height:1.3}
+.share-sheet .sh-top .t small{display:block;color:var(--dim);font-weight:400;font-size:9px}
+.share-sheet .sh-top .add{margin-left:auto;font-size:10.5px;font-weight:800;color:var(--cyan);border:1px solid rgba(53,224,255,.4);border-radius:99px;padding:2px 9px;position:relative}
+.sh-row{display:flex;align-items:center;gap:9px;padding:7px 8px;font-size:11px;color:var(--mut);border-radius:9px}
+.sh-row svg{width:15px;height:15px;flex:none;color:var(--dim)}
+.sh-row.hot{color:var(--ink);font-weight:700;background:rgba(53,224,255,.14);border:1px solid rgba(53,224,255,.5);animation:hot 2.2s ease-in-out infinite}
+.sh-row.hot svg{color:var(--cyan)}
+@keyframes hot{0%,100%{box-shadow:0 0 0 0 rgba(53,224,255,.35)}50%{box-shadow:0 0 0 6px rgba(53,224,255,0)}}
+.phone .bar{display:flex;justify-content:space-around;align-items:center;padding:8px 6px;background:#071c2b;border-top:1px solid #0d2c40}
+.phone .bar svg{width:17px;height:17px;color:var(--dim)}
+.phone .bar .sharebtn{position:relative;color:var(--cyan)}
+.phone .bar .sharebtn::after{content:"";position:absolute;inset:-6px;border-radius:10px;border:2px solid var(--cyan);animation:hot 2.2s ease-in-out infinite}
+.mock-cap{flex:1;min-width:220px;font-size:13px;color:var(--mut)}
+.mock-cap ol{margin:6px 0 0 18px}
+.mock-cap li{margin:6px 0}
+.mock-cap li b{color:var(--ink)}
+.mock-cap .num{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:var(--cyan);color:#04222b;font-family:var(--mono);font-size:10px;font-weight:800;margin-right:5px;vertical-align:1px}
+
+.pipe{width:100%;height:auto;margin:14px 0 4px;display:block}
+.pipe .node{fill:#0d2c40;stroke:#1f5878;stroke-width:1.2}
+.pipe .node.hot{fill:#0f3348;stroke:var(--cyan)}
+.pipe text{font-family:var(--sans);fill:var(--ink);font-size:12px;font-weight:700}
+.pipe text.sub{fill:var(--dim);font-size:9.5px;font-weight:400;font-family:var(--mono)}
+.pipe .flow{stroke:var(--cyan);stroke-width:1.6;fill:none;stroke-dasharray:5 6;animation:dash 1.4s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-22}}
+
+.xcode{flex:none;width:290px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#04141f;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.xcode .xc-head{display:flex;align-items:center;gap:7px;padding:8px 11px;background:#071c2b;border-bottom:1px solid #0d2c40;font-size:11px;color:var(--mut);font-weight:700}
+.xcode .xc-head .dots{display:flex;gap:5px}
+.xcode .xc-head .dots i{width:8px;height:8px;border-radius:50%}
+.xcode .xc-head .dots i:first-child{background:var(--coral)} .xcode .xc-head .dots i:nth-child(2){background:var(--amber)} .xcode .xc-head .dots i:last-child{background:var(--aqua)}
+.xcode .xc-body{padding:12px}
+.xc-row{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--mut);padding:7px 0;border-bottom:1px dashed #0d2c40}
+.xc-row:last-child{border-bottom:0}
+.xc-row .lbl{width:96px;flex:none;color:var(--dim)}
+.xc-row .val{color:var(--ink);font-weight:600}
+.xc-row .tick{width:14px;height:14px;border-radius:4px;background:var(--aqua);display:grid;place-items:center;flex:none}
+.xc-row .tick svg{width:10px;height:10px;color:#04222b}
+.xc-row .sel{border:1px solid var(--line);border-radius:7px;padding:2px 9px;background:#0a2233;color:var(--cyan);font-weight:700}
+.xc-row input{accent-color:var(--aqua)}
+
+/* ---------- faq / footer ---------- */
+.faq{margin-top:44px}
+.faq h2{font-size:clamp(20px,4vw,26px);font-weight:850;color:var(--sand);margin-bottom:6px}
+.faq .sub{color:var(--dim);font-size:13px;margin-bottom:16px}
+.qa{border:1px solid var(--line);border-radius:14px;background:rgba(10,34,51,.6);margin-bottom:10px;overflow:hidden}
+.qa button{width:100%;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;background:none;border:0;
+  color:var(--ink);font-family:var(--sans);font-size:14px;font-weight:700;padding:14px 15px;overflow-wrap:anywhere}
+.qa button .q{font-family:var(--mono);font-size:11px;color:var(--violet);flex:none}
+.qa button .car{margin-left:auto;flex:none;width:16px;height:16px;color:var(--cyan);transition:transform .28s}
+.qa.open button .car{transform:rotate(180deg)}
+.qa .a{max-height:0;overflow:hidden;transition:max-height .34s cubic-bezier(.2,.8,.2,1)}
+.qa .a-in{padding:0 15px 15px 40px;font-size:13.5px;color:var(--mut)}
+.qa .a-in b{color:var(--ink)}
+footer{margin-top:46px;border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  font-size:12.5px;color:var(--dim)}
+footer .sp{flex:1}
+.ghost{font-size:12px;color:var(--mut);background:none;border:1px solid var(--line);border-radius:99px;padding:6px 13px;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.ghost:hover{color:var(--coral);border-color:rgba(255,93,115,.5)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:60;
+  background:rgba(6,24,38,.95);border:1px solid rgba(70,240,176,.5);color:var(--aqua);font-size:13px;font-weight:700;
+  border-radius:99px;padding:9px 18px;opacity:0;pointer-events:none;transition:all .3s;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  .wrap{padding-left:14px;padding-right:14px}
+  .tabs{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+  .brand small{display:none}
+  .step{padding:14px 12px}
+  .mock-row{gap:12px}
+  .phone,.xcode{width:100%;max-width:320px}
+  .device{flex-wrap:wrap}
+  .device .go{margin-left:0}
+}
+@media (max-width:360px){
+  .kbd,kbd{white-space:normal;overflow-wrap:anywhere}
+  .pill{font-size:10px;padding:3px 8px}
+  .open-app{padding:6px 11px;font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+@media print{
+  .ambient,.bub,.topbar,#scrollbar,.tabs,.copy,.ghost,#toast,.device .go{display:none!important}
+  body{background:#fff;color:#111}
+  .panel{display:block!important}
+  .step,.qa,.cmd{border-color:#bbb;background:#fff;break-inside:avoid}
+  .s-body p,.panel-intro,.qa .a-in{color:#333}
+  .qa .a{max-height:none!important}
+  h1{color:#06283a;-webkit-text-fill-color:#06283a}
+  .wrap{padding-top:10px}
+}
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="g-fish" viewBox="0 0 24 24"><path fill="currentColor" d="M2 12c3.4-4.6 7.6-6.9 12.6-6.9 3.4 0 6.2 1.5 8.4 4.4-1 1.4-2.2 2.5-3.6 3.3.5 1.6.4 3.3-.3 5.1-1.5-1-2.6-2.2-3.3-3.6-1 .2-2 .3-3.1.3C7.6 14.6 4.4 13.7 2 12Zm14.9-2.6a1.15 1.15 0 1 0 0 2.3 1.15 1.15 0 0 0 0-2.3Z"/><path fill="currentColor" d="M3.4 6.2c1.5.5 2.6 1.4 3.4 2.6L4.6 10c-.8-1.1-1.2-2.4-1.2-3.8Zm0 11.6c0-1.4.4-2.7 1.2-3.8l2.2 1.2c-.8 1.2-1.9 2.1-3.4 2.6Z" opacity=".65"/></symbol>
+    <symbol id="g-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.8l4.6 4.6L19.5 6.6"/></symbol>
+    <symbol id="g-share" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M12 3.2v11.6M8.2 6.6L12 2.9l3.8 3.7M6.4 10.2H4.9v10.4h14.2V10.2h-1.5"/></symbol>
+    <symbol id="g-plus-sq" viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="4.4" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M12 8.2v7.6M8.2 12h7.6"/></symbol>
+    <symbol id="g-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 10.6v6M12 7.3v.2"/></symbol>
+    <symbol id="g-warn" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M12 3.4L22 20.2H2Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 9.4v5M12 17.2v.2"/></symbol>
+    <symbol id="g-phone" viewBox="0 0 24 24"><rect x="6.4" y="2.6" width="11.2" height="18.8" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M10.6 5.2h2.8M11 18.6h2"/></symbol>
+    <symbol id="g-car" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5 9l7 7 7-7"/></symbol>
+    <symbol id="g-copy" viewBox="0 0 24 24"><rect x="8.4" y="8.4" width="12" height="12" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="1.9" d="M15.6 5.4H6a2.6 2.6 0 0 0-2.6 2.6v9.6"/></symbol>
+    <symbol id="g-lock" viewBox="0 0 24 24"><rect x="5.4" y="10.4" width="13.2" height="10" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="1.9" d="M8.4 10.4V7.8a3.6 3.6 0 0 1 7.2 0v2.6"/></symbol>
+    <symbol id="g-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14.5 5.5L8 12l6.5 6.5"/></symbol>
+    <symbol id="g-fwd" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9.5 5.5L16 12l-6.5 6.5"/></symbol>
+    <symbol id="g-tabs" viewBox="0 0 24 24"><rect x="3.4" y="6.4" width="12" height="12" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="1.9" d="M8.6 6.4V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-1.4"/></symbol>
+    <symbol id="g-book" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M12 6.4C10.4 4.9 8.2 4.2 5 4.2v13.6c3.2 0 5.4.7 7 2.2 1.6-1.5 3.8-2.2 7-2.2V4.2c-3.2 0-5.4.7-7 2.2Zm0 0v13.6"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <span class="brand"><svg aria-hidden="true"><use href="#g-fish"/></svg><span>CYBER AQUA<small>INSTALL GUIDE</small></span></span>
+  <span class="sp"></span>
+  <span class="pill" id="globalProg">0 / 17 步</span>
+  <a class="open-app" href="./index.html">打开鱼缸</a>
+</header>
+<div id="scrollbar" aria-hidden="true"></div>
+
+<main class="wrap">
+  <section class="hero reveal">
+    <div class="eyebrow">Deep Sea Pet Machine · iOS</div>
+    <h1>把整缸深海，<br>装进你的 iPhone</h1>
+    <p class="lede">三条路线，按你手边的设备选：<b>没有 Mac</b> 也能装——方法一 3 分钟搞定、离线可玩；想要真正的 <b>.ipa 安装包</b>，方法二用 GitHub 免费云编译，方法三在 Mac 上签名上架。勾选步骤会自动保存进度。</p>
+    <div class="meta-chips">
+      <span class="chip g"><i></i>方法一 · 约 3 分钟 · 无需电脑签名</span>
+      <span class="chip v"><i></i>方法二 · 约 15 分钟 · 无需 Mac</span>
+      <span class="chip a"><i></i>方法三 · 约 20 分钟 · 需要 Mac</span>
+    </div>
+    <div class="device" id="deviceBox" hidden>
+      <svg aria-hidden="true"><use href="#g-phone"/></svg>
+      <span id="deviceMsg"></span>
+      <a class="go" href="./index.html" id="deviceGo">打开鱼缸应用</a>
+    </div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="安装方法">
+    <button class="tab" role="tab" id="tab-pwa" aria-controls="panel-pwa" aria-selected="true" data-tab="pwa">
+      <span class="no">1</span><span>免电脑 · PWA<small>添加到主屏幕</small></span><span class="done" data-done="pwa"></span>
+    </button>
+    <button class="tab" role="tab" id="tab-cloud" aria-controls="panel-cloud" aria-selected="false" data-tab="cloud">
+      <span class="no">2</span><span>无 Mac · 云编译 IPA<small>GitHub Actions + 侧载</small></span><span class="done" data-done="cloud"></span>
+    </button>
+    <button class="tab" role="tab" id="tab-mac" aria-controls="panel-mac" aria-selected="false" data-tab="mac">
+      <span class="no">3</span><span>有 Mac · 原生签名<small>Xcode / TestFlight</small></span><span class="done" data-done="mac"></span>
+    </button>
+  </nav>
+
+  <!-- ================= METHOD 1 ================= -->
+  <section class="panel on" id="panel-pwa" role="tabpanel" aria-labelledby="tab-pwa">
+    <div class="panel-head reveal"><h2>方法一 · 添加到主屏幕（PWA）</h2><span class="tagline">RECOMMENDED</span></div>
+    <p class="panel-intro reveal">应用已内置 Service Worker 离线缓存与全套主屏幕图标。装好后是<b>独立图标、全屏无地址栏、飞行模式可玩</b>，体验与原生 App 一致，且<b>永久有效、不用每 7 天重签</b>。唯一前提：一个 <b>https://</b> 网址。</p>
+    <div class="req reveal">
+      <span class="chip g"><i></i>iPhone / iPad · Safari</span>
+      <span class="chip"><i></i>一个 https 网址（下面第 1 步免费获得）</span>
+      <span class="chip"><i></i>不需要 Mac · 不需要 Apple 开发者账号</span>
+    </div>
+    <div class="prog reveal"><span>本方法进度</span><span class="bar"><i data-bar="pwa"></i></span><b data-count="pwa">0/6</b></div>
+
+    <article class="step reveal" data-step="pwa-1">
+      <label class="check"><input type="checkbox" data-id="pwa-1" aria-label="完成步骤 1"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 1</span>获得一个 https 网址（二选一）</div>
+        <p><b>临时体验（30 秒、免账号）</b>：电脑先运行 <kbd>npm run serve</kbd>，再开一个终端执行下面的命令，把本机鱼缸变成公网 https 网址：</p>
+        <div class="cmd"><div class="cmd-head"><span class="dots"><i></i><i></i><i></i></span><span>TERMINAL · 临时隧道</span><button class="copy" data-copy="c1">复制</button></div>
+<pre id="c1">npx --yes cloudflared tunnel --url http://127.0.0.1:8765
+<span class="c"># 输出里找 https://xxxx.trycloudflare.com ，手机 Safari 打开它</span></pre></div>
+        <p><b>长期固定（免费托管）</b>：把 <b>www/ 文件夹里的全部内容</b>上传到 GitHub 仓库 → <b>Settings ▸ Pages</b> → Source 选 <b>Deploy from a branch</b>、分支 <b>main</b>、目录 <b>/ (root)</b> → Save，一分钟后得到 <span class="kbd">https://用户名.github.io/仓库名/</span>。也可把 www 文件夹拖到 Netlify / Cloudflare Pages / Vercel 任一免费静态托管。</p>
+        <div class="note warn"><svg aria-hidden="true"><use href="#g-warn"/></svg><span><b>局域网 http 地址不行</b>：<span class="kbd">http://192.168.x.x:8765</span> 只能在线玩，iOS 不允许 http 页面添加主屏幕或离线缓存。必须是 https。</span></div>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="pwa-2">
+      <label class="check"><input type="checkbox" data-id="pwa-2" aria-label="完成步骤 2"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 2</span>用 iPhone 的 Safari 打开网址</div>
+        <p>必须是 <b>Safari</b>。Chrome、Edge、微信 / QQ 内置浏览器都<b>没有</b>“添加到主屏幕”能力。地址栏出现<b>小锁图标</b>才说明 https 生效。</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="pwa-3">
+      <label class="check"><input type="checkbox" data-id="pwa-3" aria-label="完成步骤 3"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 3</span>点“分享”按钮</div>
+        <p>iPhone 上在<b>底部工具栏中间</b>：一个方框加向上箭头的图标；iPad 在顶部地址栏旁。对照下图高亮位置：</p>
+        <div class="mock-row">
+          <div class="phone" aria-hidden="true">
+            <div class="scr">
+              <div class="url"><svg class="lock" width="11" height="11"><use href="#g-lock"/></svg>https://你的网址<span style="margin-left:auto">⟳</span></div>
+              <div class="share-sheet">
+                <div class="sh-top">
+                  <span class="fav"><svg><use href="#g-fish"/></svg></span>
+                  <span class="t">CYBER AQUA · 深海水族宠物机<small>你的网址</small></span>
+                  <span class="add">添加</span>
+                </div>
+                <div class="sh-row"><svg><use href="#g-copy"/></svg>复制</div>
+                <div class="sh-row"><svg><use href="#g-book"/></svg>添加到阅读列表</div>
+                <div class="sh-row hot"><svg><use href="#g-plus-sq"/></svg>添加到主屏幕</div>
+                <div class="sh-row"><svg><use href="#g-tabs"/></svg>在页面上查找…</div>
+              </div>
+              <div class="bar">
+                <svg><use href="#g-back"/></svg><svg><use href="#g-fwd"/></svg>
+                <svg class="sharebtn"><use href="#g-share"/></svg>
+                <svg><use href="#g-book"/></svg><svg><use href="#g-tabs"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="mock-cap">
+            <b style="color:var(--ink)">对照操作</b>
+            <ol>
+              <li><span class="num">1</span>点底部中间的<b>分享</b>图标（方框 + 向上箭头）。</li>
+              <li><span class="num">2</span>菜单里<b>往下滑</b>，找到带 <b>⊞ 图标</b>的“<b>添加到主屏幕</b>”。</li>
+              <li><span class="num">3</span>下一页右上角点“<b>添加</b>”（名称可改成“水族宠物机”）。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="pwa-4">
+      <label class="check"><input type="checkbox" data-id="pwa-4" aria-label="完成步骤 4"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 4</span>选“添加到主屏幕”→ 右上角“添加”</div>
+        <p>确认页会显示图标与名称（<b>水族宠物机</b>）。点右上角<b>添加</b>后回到主屏幕，最后一页就能看到新图标。</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="pwa-5">
+      <label class="check"><input type="checkbox" data-id="pwa-5" aria-label="完成步骤 5"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 5</span>点图标启动，轻触进入鱼缸</div>
+        <p>启动后是<b>全屏深海画面</b>（无地址栏）。轻触“<b>轻触进入鱼缸</b>”解锁声音并开始。操作：<b>单指拖动</b>旋转视角、<b>双指捏合 / 滚轮</b>缩放、底部<b>喂食</b>后按住<b>倾倒</b>撒饲料、右侧控制台 18 项实时调节。</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="pwa-6">
+      <label class="check"><input type="checkbox" data-id="pwa-6" aria-label="完成步骤 6"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 6</span>验证离线与存档</div>
+        <p>开<b>飞行模式</b>再点图标：应能正常进入（Service Worker 已缓存全部资源）。喂鱼、清洁、客人邀请等进度保存在<b>本机</b>，关掉再开不会丢。</p>
+        <div class="note tip"><svg aria-hidden="true"><use href="#g-info"/></svg><span>以后代码更新后，联网打开一次即自动拉取新版本（network-first 缓存策略），无需重新添加图标。</span></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= METHOD 2 ================= -->
+  <section class="panel" id="panel-cloud" role="tabpanel" aria-labelledby="tab-cloud" hidden>
+    <div class="panel-head reveal"><h2>方法二 · 没有 Mac？云端编译 IPA</h2><span class="tagline">CLOUD BUILD + SIDELOAD</span></div>
+    <p class="panel-intro reveal">Apple 规定 iOS 包必须在 macOS 上编译签名——但<b>那台 Mac 可以是 GitHub 的免费云主机</b>。项目已附带工作流 <span class="kbd">.github/workflows/ios-build.yml</span>：push 后自动产出未签名 <b>.ipa</b>，再用电脑上的侧载工具以你的 Apple ID 重签安装。</p>
+    <div class="req reveal">
+      <span class="chip v"><i></i>GitHub 账号（免费）</span>
+      <span class="chip"><i></i>Windows / Mac 电脑 + 数据线</span>
+      <span class="chip"><i></i>Apple ID（免费即可）</span>
+      <span class="chip a"><i></i>每 7 天重签一次</span>
+    </div>
+    <div class="prog reveal"><span>本方法进度</span><span class="bar"><i data-bar="cloud"></i></span><b data-count="cloud">0/6</b></div>
+
+    <svg class="pipe reveal" viewBox="0 0 760 108" role="img" aria-label="云编译流程：电脑推送代码到 GitHub Actions 云编译，产出 IPA，经 Sideloadly 重签后安装到 iPhone">
+      <rect class="node" x="4" y="26" width="128" height="52" rx="12"/>
+      <text x="68" y="48" text-anchor="middle">你的电脑</text><text class="sub" x="68" y="64" text-anchor="middle">git push</text>
+      <path class="flow" d="M132 52h34"/>
+      <rect class="node hot" x="166" y="26" width="150" height="52" rx="12"/>
+      <text x="241" y="48" text-anchor="middle">GitHub Actions</text><text class="sub" x="241" y="64" text-anchor="middle">macOS 云编译</text>
+      <path class="flow" d="M316 52h34"/>
+      <rect class="node" x="350" y="26" width="128" height="52" rx="12"/>
+      <text x="414" y="48" text-anchor="middle">unsigned.ipa</text><text class="sub" x="414" y="64" text-anchor="middle">Artifacts 下载</text>
+      <path class="flow" d="M478 52h34"/>
+      <rect class="node hot" x="512" y="26" width="120" height="52" rx="12"/>
+      <text x="572" y="48" text-anchor="middle">Sideloadly</text><text class="sub" x="572" y="64" text-anchor="middle">Apple ID 重签</text>
+      <path class="flow" d="M632 52h34"/>
+      <rect class="node" x="666" y="26" width="90" height="52" rx="12"/>
+      <text x="711" y="48" text-anchor="middle">iPhone</text><text class="sub" x="711" y="64" text-anchor="middle">信任并启动</text>
+    </svg>
+
+    <article class="step reveal" data-step="cloud-1">
+      <label class="check"><input type="checkbox" data-id="cloud-1" aria-label="完成步骤 1"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 1</span>把项目推送到 GitHub</div>
+        <p>在 GitHub 新建一个<b>空仓库</b>（不要勾选 README），然后在项目根目录（<span class="kbd">D:\鱼缸程序</span>）执行：</p>
+        <div class="cmd"><div class="cmd-head"><span class="dots"><i></i><i></i><i></i></span><span>TERMINAL · 推送</span><button class="copy" data-copy="c2">复制</button></div>
+<pre id="c2">git init
+git add .
+git commit -m <span class="v">"cyber aqua pet"</span>
+git branch -M main
+git remote add origin https://github.com/<span class="v">你的用户名</span>/cyber-aqua.git
+git push -u origin main</pre></div>
+        <p>仓库里必须包含 <span class="kbd">.github/workflows/ios-build.yml</span>、<span class="kbd">www/</span>、<span class="kbd">tools/build-ios.sh</span>、<span class="kbd">package.json</span>、<span class="kbd">capacitor.config.json</span>。</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="cloud-2">
+      <label class="check"><input type="checkbox" data-id="cloud-2" aria-label="完成步骤 2"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 2</span>触发云编译</div>
+        <p>push 会<b>自动触发</b>。也可手动：仓库页 <b>Actions</b> 标签 → 左侧 <b>iOS Build</b> → <b>Run workflow</b> → 选 main → 绿色 Run 按钮。</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="cloud-3">
+      <label class="check"><input type="checkbox" data-id="cloud-3" aria-label="完成步骤 3"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 3</span>下载 IPA 产物</div>
+        <p>等约 <b>5–8 分钟</b>运行变绿 → 点进该 run → 页面底部 <b>Artifacts</b> → 下载 <span class="kbd">CyberAqua-unsigned-ipa</span> 压缩包 → 解压得到 <b>CyberAqua-unsigned.ipa</b>。</p>
+        <div class="note bad"><svg aria-hidden="true"><use href="#g-warn"/></svg><span>这是<b>未签名</b>包，双击 / 爱思助手“直装”都<b>装不上</b>——必须经下一步用你的 Apple ID 重签。任何宣称“免签直装 ipa”的渠道都不可信。</span></div>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="cloud-4">
+      <label class="check"><input type="checkbox" data-id="cloud-4" aria-label="完成步骤 4"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 4</span>电脑装 Sideloadly，连接 iPhone</div>
+        <p>到 <b>sideloadly.io</b> 下载 Windows / macOS 版并安装打开。iPhone 用<b>数据线</b>连电脑，手机弹窗点“<b>信任此电脑</b>”并输入锁屏密码。（备选：AltStore + AltServer，可在同 Wi-Fi 下自动续签。）</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="cloud-5">
+      <label class="check"><input type="checkbox" data-id="cloud-5" aria-label="完成步骤 5"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 5</span>拖入 IPA → 输入 Apple ID → Start</div>
+        <p>Sideloadly 识别到设备后，把 <b>.ipa 拖进窗口</b>，填你的 <b>Apple ID</b>（免费账号即可，建议用小号），点 <b>Start</b>。期间可能要求输入 Apple ID 密码 / 双重验证码，按提示填写，等待进度走完。</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="cloud-6">
+      <label class="check"><input type="checkbox" data-id="cloud-6" aria-label="完成步骤 6"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 6</span>iPhone 信任证书并启动</div>
+        <p>手机：<b>设置 ▸ 通用 ▸ VPN与设备管理</b> → 点你的 Apple ID 开发者证书 → <b>信任</b>。回桌面点“<b>水族宠物机</b>”即可运行。</p>
+        <div class="note warn"><svg aria-hidden="true"><use href="#g-warn"/></svg><span><b>免费 Apple ID 签名 7 天有效</b>：到期 App 会闪退 / 打不开，用 Sideloadly 再 Start 一次即续期（缸内进度保留）。想彻底摆脱重签：用方法一 PWA，或方法三的付费开发者账号。</span></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= METHOD 3 ================= -->
+  <section class="panel" id="panel-mac" role="tabpanel" aria-labelledby="tab-mac" hidden>
+    <div class="panel-head reveal"><h2>方法三 · 有 Mac：Xcode 原生签名</h2><span class="tagline">NATIVE / TESTFLIGHT</span></div>
+    <p class="panel-intro reveal">最稳的路线：Capacitor 工程已配置好（<span class="kbd">com.cyberaqua.pet</span> / 应用名“水族宠物机” / 启动图背景 <span class="kbd">#030d15</span>）。免费 Apple ID 可直接真机运行；付费账号可上 TestFlight / App Store，<b>不再受 7 天限制</b>。</p>
+    <div class="req reveal">
+      <span class="chip a"><i></i>macOS 12+ · Xcode 15+</span>
+      <span class="chip"><i></i>Node.js 18+</span>
+      <span class="chip"><i></i>Apple ID（免费可跑真机）</span>
+      <span class="chip g"><i></i>iOS 16+ 需开开发者模式</span>
+    </div>
+    <div class="prog reveal"><span>本方法进度</span><span class="bar"><i data-bar="mac"></i></span><b data-count="mac">0/5</b></div>
+
+    <article class="step reveal" data-step="mac-1">
+      <label class="check"><input type="checkbox" data-id="mac-1" aria-label="完成步骤 1"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 1</span>装好 Xcode 与命令行工具</div>
+        <p>App Store 安装 <b>Xcode</b>，首次启动同意许可；终端执行：</p>
+        <div class="cmd"><div class="cmd-head"><span class="dots"><i></i><i></i><i></i></span><span>TERMINAL · macOS</span><button class="copy" data-copy="c3">复制</button></div>
+<pre id="c3">xcode-select --install
+sudo xcodebuild -license accept</pre></div>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="mac-2">
+      <label class="check"><input type="checkbox" data-id="mac-2" aria-label="完成步骤 2"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 2</span>同步工程（两种走法）</div>
+        <p><b>走法 A（推荐，直接真机）</b>：生成并打开 Xcode 工程，跳到第 3 步签名后 ⌘R。</p>
+        <div class="cmd"><div class="cmd-head"><span class="dots"><i></i><i></i><i></i></span><span>TERMINAL · 工程</span><button class="copy" data-copy="c4">复制</button></div>
+<pre id="c4">cd <span class="v">/path/to/鱼缸程序</span>
+npm install
+npm run ios:open   <span class="c"># 自动 cap add ios + sync + 打开 Xcode</span></pre></div>
+        <p><b>走法 B（要 .ipa 文件）</b>：一条命令产出未签名包，供侧载或留档：</p>
+        <div class="cmd"><div class="cmd-head"><span class="dots"><i></i><i></i><i></i></span><span>TERMINAL · 打包</span><button class="copy" data-copy="c5">复制</button></div>
+<pre id="c5">npm run ios:build  <span class="c"># → build/CyberAqua-unsigned.ipa</span></pre></div>
+        <div class="note tip"><svg aria-hidden="true"><use href="#g-info"/></svg><span>脚本会自动写入 1024px 应用图标、执行无签名 archive 并 zip 成 Payload 结构；签名安装请走走法 A。</span></div>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="mac-3">
+      <label class="check"><input type="checkbox" data-id="mac-3" aria-label="完成步骤 3"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 3</span>Signing &amp; Capabilities 选你的 Team</div>
+        <p>Xcode 左侧选 <b>App</b> 工程 → TARGETS <b>App</b> → <b>Signing &amp; Capabilities</b>：勾 <b>Automatically manage signing</b>，<b>Team</b> 选你的 Apple ID（显示为 <i>Personal Team</i>），把 <b>Bundle Identifier</b> 改成全网唯一串。对照下图：</p>
+        <div class="mock-row">
+          <div class="xcode" aria-hidden="true">
+            <div class="xc-head"><span class="dots"><i></i><i></i><i></i></span>App ▸ Signing &amp; Capabilities</div>
+            <div class="xc-body">
+              <div class="xc-row"><span class="tick"><svg><use href="#g-check"/></svg></span><span class="val">Automatically manage signing</span></div>
+              <div class="xc-row"><span class="lbl">Team</span><span class="sel">你的 Apple ID (Personal Team) ▾</span></div>
+              <div class="xc-row"><span class="lbl">Bundle ID</span><span class="val">com.你的名字.aqua</span></div>
+              <div class="xc-row"><span class="lbl">Provisioning</span><span class="val" style="color:var(--aqua)">Xcode Managed ✓</span></div>
+              <div class="xc-row"><span class="lbl">Signing Cert</span><span class="val">Apple Development: 你…</span></div>
+            </div>
+          </div>
+          <div class="mock-cap">
+            <b style="color:var(--ink)">注意</b>
+            <ol>
+              <li>没登录 Apple ID：Xcode ▸ Settings ▸ Accounts ▸ <b>+</b> 添加。</li>
+              <li>Bundle ID 与他人冲突会报 signing 错误，<b>改唯一</b>即可。</li>
+              <li>免费 Personal Team 每 7 天需重跑一次 ⌘R 续签。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="mac-4">
+      <label class="check"><input type="checkbox" data-id="mac-4" aria-label="完成步骤 4"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 4</span>开开发者模式，选设备 ⌘R</div>
+        <p>iPhone（iOS 16+）：<b>设置 ▸ 隐私与安全性 ▸ 开发者模式</b> → 打开 → 按提示重启。数据线连 Mac（或 Xcode ▸ Window ▸ Devices and Simulators 里同 Wi-Fi 配对），Xcode 顶部运行目标选<b>你的 iPhone</b>，按 <b>⌘R</b> 编译安装。</p>
+      </div>
+    </article>
+
+    <article class="step reveal" data-step="mac-5">
+      <label class="check"><input type="checkbox" data-id="mac-5" aria-label="完成步骤 5"><span class="box"><svg aria-hidden="true"><use href="#g-check"/></svg></span></label>
+      <div class="s-body">
+        <div class="s-title"><span class="idx">STEP 5</span>信任证书 → 启动；进阶上架</div>
+        <p>首次启动若提示“未受信任的开发者”：<b>设置 ▸ 通用 ▸ VPN与设备管理</b> → 信任你的证书，再点桌面图标。</p>
+        <p>付费开发者账号（$99/年）：<b>Product ▸ Archive</b> → Organizer 里 <b>Distribute App</b> → <b>TestFlight</b>（邀请测试、90 天有效）或 <b>App Store</b>（审核上架、永久有效）。</p>
+        <div class="note tip"><svg aria-hidden="true"><use href="#g-info"/></svg><span>WebView 壳与 PWA 跑的是同一份 www 代码，性能一致；原生壳的优势是<b>独立进程、不受 Safari 缓存清理影响、可上架</b>。</span></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="faq reveal">
+    <h2>常见问题排查</h2>
+    <p class="sub">装不上 / 打不开 / 没声音，先对照这里。</p>
+    <div class="qa"><button aria-expanded="false"><span class="q">Q1</span>分享菜单里找不到“添加到主屏幕”？<svg class="car" aria-hidden="true"><use href="#g-car"/></svg></button>
+      <div class="a"><div class="a-in">三个条件缺一不可：<b>Safari 浏览器</b>（微信 / Chrome 不行）、<b>https 网址</b>（http 不行）、<b>非无痕浏览</b>（无痕窗口不允许添加）。菜单较长，记得<b>往下滑</b>；iPad 上分享按钮在顶部。</div></div></div>
+    <div class="qa"><button aria-expanded="false"><span class="q">Q2</span>添加后打开白屏 / 一直转圈？<svg class="car" aria-hidden="true"><use href="#g-car"/></svg></button>
+      <div class="a"><div class="a-in">首次启动需要联网加载。确认托管目录包含 <b>www 的全部文件</b>（尤其 <span class="kbd">vendor/three.module.js</span>、<span class="kbd">sw.js</span>、<span class="kbd">icons/</span>）。仍白屏：Safari 设置里清除该网站数据后重开；云编译包白屏多为侧载未完成信任步骤。</div></div></div>
+    <div class="qa"><button aria-expanded="false"><span class="q">Q3</span>没有声音？<svg class="car" aria-hidden="true"><use href="#g-car"/></svg></button>
+      <div class="a"><div class="a-in">iOS 要求用户手势解锁音频：启动时<b>轻触“轻触进入鱼缸”</b>即解锁。右上角<b>喇叭按钮</b>是总静音开关；请调<b>媒体音量</b>（不是铃声音量），并确认侧边静音键未拨下（部分机型影响外放）。</div></div></div>
+    <div class="qa"><button aria-expanded="false"><span class="q">Q4</span>进度会丢吗？能换手机同步吗？<svg class="car" aria-hidden="true"><use href="#g-car"/></svg></button>
+      <div class="a"><div class="a-in">饱食 / 心情 / 鱼缸配置等存于<b>本机 localStorage</b>，正常关开不丢。<b>清除 Safari 网站数据、删除主屏幕图标、应用内“重新养一缸鱼”</b>会重置。暂无云同步，换机需重新养。</div></div></div>
+    <div class="qa"><button aria-expanded="false"><span class="q">Q5</span>老 iPhone 卡顿 / 发热？<svg class="car" aria-hidden="true"><use href="#g-car"/></svg></button>
+      <div class="a"><div class="a-in">右侧控制台把<b>画质</b>切到“低”（降分辨率与粒子），关闭<b>光柱</b>与<b>网格</b>；视角预设选“正面”减少 overdraw。PWA 与原生壳性能相同，瓶颈在 GPU 而非安装方式。</div></div></div>
+    <div class="qa"><button aria-expanded="false"><span class="q">Q6</span>IPA 安装报“无法验证 / MismatchedApplicationIdentifier…”？<svg class="car" aria-hidden="true"><use href="#g-car"/></svg></button>
+      <div class="a"><div class="a-in">依次检查：① 证书已在 <b>VPN与设备管理</b> 里信任；② 免费签名是否<b>超过 7 天</b>（重签即可）；③ Bundle ID 与设备上已有 App 冲突（改唯一）；④ 数据线 / 信任电脑弹窗是否完成。AltStore 用户确认 AltServer 在同网络运行。</div></div></div>
+    <div class="qa"><button aria-expanded="false"><span class="q">Q7</span>支持横屏 / 刘海屏吗？<svg class="car" aria-hidden="true"><use href="#g-car"/></svg></button>
+      <div class="a"><div class="a-in">支持<b>任意方向</b>，横屏更沉浸；已适配 <span class="kbd">viewport-fit=cover</span> 安全区，刘海与 Home 条不会遮挡控制台和按钮。PWA 为 standalone 全屏，无地址栏。</div></div></div>
+  </section>
+
+  <footer class="reveal">
+    <span>CYBER AQUA · 深海水族宠物机 · 安装教程 v1</span>
+    <span class="sp"></span>
+    <button class="ghost" id="resetProg">清空勾选进度</button>
+    <a href="./index.html">返回鱼缸</a>
+  </footer>
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<span class="sr" id="live" aria-live="polite"></span>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'cyber-aqua-guide-v1';
+  var METHODS = { pwa: 6, cloud: 6, mac: 5 };
+  var TOTAL = 17;
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { state = {}; }
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function toast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('on');
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('on'); }, 1800);
+  }
+
+  /* bubbles */
+  var amb = document.querySelector('.ambient');
+  for (var i = 0; i < 14; i++) {
+    var b = document.createElement('span');
+    b.className = 'bub';
+    var s = 4 + Math.random() * 14;
+    b.style.width = b.style.height = s.toFixed(1) + 'px';
+    b.style.left = (Math.random() * 100).toFixed(1) + '%';
+    b.style.animationDuration = (14 + Math.random() * 18).toFixed(1) + 's';
+    b.style.animationDelay = (-Math.random() * 24).toFixed(1) + 's';
+    amb.appendChild(b);
+  }
+
+  /* progress */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.check input'));
+  function refresh() {
+    var doneAll = 0;
+    Object.keys(METHODS).forEach(function (m) {
+      var n = 0;
+      boxes.forEach(function (bx) { if (bx.dataset.id.indexOf(m + '-') === 0 && bx.checked) n++; });
+      doneAll += n;
+      var bar = document.querySelector('[data-bar="' + m + '"]');
+      var cnt = document.querySelector('[data-count="' + m + '"]');
+      var tabDone = document.querySelector('[data-done="' + m + '"]');
+      if (bar) bar.style.width = (n / METHODS[m] * 100) + '%';
+      if (cnt) cnt.textContent = n + '/' + METHODS[m];
+      if (tabDone) tabDone.textContent = n === METHODS[m] ? '✓' : (n ? n + '/' + METHODS[m] : '');
+      var panel = document.getElementById('panel-' + m);
+      Array.prototype.forEach.call(panel.querySelectorAll('.step'), function (st) {
+        var bx = st.querySelector('input');
+        st.classList.toggle('done', !!(bx && bx.checked));
+      });
+    });
+    document.getElementById('globalProg').textContent = doneAll + ' / ' + TOTAL + ' 步';
+  }
+  boxes.forEach(function (bx) {
+    bx.checked = !!state[bx.dataset.id];
+    bx.addEventListener('change', function () {
+      state[bx.dataset.id] = bx.checked; save(); refresh();
+      document.getElementById('live').textContent = bx.checked ? '步骤已勾选' : '步骤已取消勾选';
+    });
+  });
+  refresh();
+  document.getElementById('resetProg').addEventListener('click', function () {
+    state = {}; save();
+    boxes.forEach(function (bx) { bx.checked = false; });
+    refresh(); toast('勾选进度已清空');
+  });
+
+  /* tabs */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function show(name, push) {
+    tabs.forEach(function (t) {
+      var on = t.dataset.tab === name;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      var p = document.getElementById('panel-' + t.dataset.tab);
+      p.classList.toggle('on', on);
+      p.hidden = !on;
+    });
+    if (push !== false) history.replaceState(null, '', '#' + name);
+    revealScan();
+  }
+  tabs.forEach(function (t, idx) {
+    t.addEventListener('click', function () { show(t.dataset.tab); });
+    t.addEventListener('keydown', function (ev) {
+      var d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      ev.preventDefault();
+      var n = tabs[(idx + d + tabs.length) % tabs.length];
+      n.focus(); show(n.dataset.tab);
+    });
+  });
+  var h = (location.hash || '').replace('#', '');
+  show(METHODS[h] ? h : 'pwa', false);
+
+  /* copy */
+  function copyText(txt, btn) {
+    function ok() {
+      btn.classList.add('ok'); btn.textContent = '已复制 ✓';
+      document.getElementById('live').textContent = '命令已复制';
+      setTimeout(function () { btn.classList.remove('ok'); btn.textContent = '复制'; }, 1600);
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta); ta.select();
+      var done = false;
+      try { done = document.execCommand('copy'); } catch (e) { done = false; }
+      document.body.removeChild(ta);
+      if (done) ok(); else toast('复制失败，请长按手动选择');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      var settled = false;
+      var timer = setTimeout(function () { if (!settled) { settled = true; fallback(); } }, 700);
+      navigator.clipboard.writeText(txt).then(function () {
+        if (settled) return; settled = true; clearTimeout(timer); ok();
+      }, function () {
+        if (settled) return; settled = true; clearTimeout(timer); fallback();
+      });
+    } else fallback();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.copy'), function (btn) {
+    btn.addEventListener('click', function () {
+      var pre = document.getElementById(btn.dataset.copy);
+      copyText(pre.textContent, btn);
+    });
+  });
+
+  /* faq */
+  Array.prototype.forEach.call(document.querySelectorAll('.qa'), function (qa) {
+    var btn = qa.querySelector('button'), a = qa.querySelector('.a');
+    btn.addEventListener('click', function () {
+      var open = qa.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      a.style.maxHeight = open ? a.scrollHeight + 'px' : '0px';
+    });
+  });
+
+  /* reveal + scroll bar */
+  function revealScan() {
+    var vh = window.innerHeight;
+    revealEls.forEach(function (el) {
+      if (el.classList.contains('in')) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < vh * 0.94 && r.bottom > 0) el.classList.add('in');
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.06 });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else revealScan();
+  var sb = document.getElementById('scrollbar');
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    sb.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    revealScan();
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  /* device hint */
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var box = document.getElementById('deviceBox');
+  if (ios) {
+    box.hidden = false;
+    var standalone = navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+    document.getElementById('deviceMsg').innerHTML = standalone
+      ? '<b>检测到已安装运行中</b>：你正在主屏幕 App 内阅读本教程，可直接按方法一核对离线与存档。'
+      : '<b>检测到 iPhone / iPad</b>：若当前是 Safari 且网址为 https，可直接执行方法一第 3 步；否则先回电脑完成第 1 步。';
+    document.getElementById('deviceGo').textContent = standalone ? '返回鱼缸' : '打开鱼缸应用';
+  }
+})();
+</script>
+</body>
+</html>

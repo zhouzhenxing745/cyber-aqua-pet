@@ -1,0 +1,13 @@
+{
+  "appId": "com.cyberaqua.pet",
+  "appName": "水族宠物机",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#030d15",
+    "preferredContentMode": "mobile"
+  },
+  "server": {
+    "iosScheme": "https"
+  }
+}

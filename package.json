@@ -1,0 +1,20 @@
+{
+  "name": "cyber-aqua-pet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CYBER AQUA · 3D 深海水族宠物机（Web + PWA + Capacitor iOS）",
+  "scripts": {
+    "serve": "npx --yes http-server www -p 8765 -c-1 --silent",
+    "ios:add": "cap add ios",
+    "ios:sync": "cap sync ios",
+    "ios:open": "cap open ios",
+    "ios:build": "bash tools/build-ios.sh"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/ios": "^6.2.0"
+  }
+}

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title>CYBER AQUA · 深海水族宠物机</title>
+<meta name="description" content="3D 深海水族宠物机：喂养、玩耍、清洁，自由旋转视角，真实饲料瓶物理。">
+<meta name="theme-color" content="#030d15">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="水族宠物机">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-1024.png">
+<link rel="icon" href="icons/icon-1024.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<g id="s-stroke" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></g>
+</defs>
+<symbol id="i-fish" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12c3-4.2 6.4-6.3 10.2-6.3 3.4 0 6.2 2.1 8.3 6.3-2.1 4.2-4.9 6.3-8.3 6.3C8.9 18.3 5.5 16.2 2.5 12Z"/><path d="M21 12c.6-1.6.9-3 .9-4.2-1.6.5-2.9 1.4-3.9 2.6M21 12c.6 1.6.9 3 .9 4.2-1.6-.5-2.9-1.4-3.9-2.6"/><circle cx="8.6" cy="10.6" r="1.15" fill="currentColor" stroke="none"/><path d="M12 6.2c.9 1.6 1.3 3.5 1.3 5.8s-.4 4.2-1.3 5.8"/></g></symbol>
+<symbol id="i-feed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.6h6v2.2l1.6 2.1c.5.7.8 1.5.8 2.4v9.3a2.4 2.4 0 0 1-2.4 2.4H9a2.4 2.4 0 0 1-2.4-2.4V9.3c0-.9.3-1.7.8-2.4L9 4.8V2.6Z"/><path d="M6.6 12.4h10.8"/><circle cx="10" cy="15.6" r="1" fill="currentColor" stroke="none"/><circle cx="13.8" cy="17.4" r="1" fill="currentColor" stroke="none"/><circle cx="13.4" cy="14.4" r="1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.6 2.3 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15l-4.9 2.8 1.2-5.6L4.1 8.4l5.6-.6L12 2.6Z"/><path d="M19.4 17.6 21 19.2M4.6 17.6 3 19.2"/></g></symbol>
+<symbol id="i-clean" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8c3.6 4.2 5.4 7.4 5.4 9.7a5.4 5.4 0 0 1-10.8 0c0-2.3 1.8-5.5 5.4-9.7Z"/><path d="M9.4 12.9a2.6 2.6 0 0 0 2.6 2.6"/><circle cx="19" cy="5.4" r="1.7"/><circle cx="4.8" cy="8.2" r="1.2"/></g></symbol>
+<symbol id="i-guest" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 11.4a7.6 7.6 0 0 1 15.2 0c0 1.5-.6 2.4-1.6 2.4H6c-1 0-1.6-.9-1.6-2.4Z"/><path d="M7 14.2c0 2.4-.8 3.6-.8 5.2M10.4 14.2c0 2.6.9 3.4.9 5.4M13.6 14.2c0 2.6-.9 3.4-.9 5.4M17 14.2c0 2.4.8 3.6.8 5.2"/><circle cx="9.4" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="14.6" cy="10" r="1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-sound" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.2h3.4L12 5.2v13.6l-4.6-4H4V9.2Z"/><path d="M15.6 9.4a3.7 3.7 0 0 1 0 5.2M18.2 6.8a7.4 7.4 0 0 1 0 10.4"/></g></symbol>
+<symbol id="i-mute" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.2h3.4L12 5.2v13.6l-4.6-4H4V9.2Z"/><path d="m16.2 9.6 5 4.8M21.2 9.6l-5 4.8"/></g></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.6v2.6M12 18.8v2.6M21.4 12h-2.6M5.2 12H2.6M18.6 5.4l-1.8 1.8M7.2 16.8l-1.8 1.8M18.6 18.6l-1.8-1.8M7.2 7.2 5.4 5.4"/></g></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M9.5 9.4a2.6 2.6 0 1 1 3.4 2.5c-.6.2-.9.8-.9 1.4v.5"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6.4 6.4 11.2 11.2M17.6 6.4 6.4 17.6"/></g></symbol>
+<symbol id="i-cam-free" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3.2 7.4 4.3v8.9L12 20.8l-7.4-4.4V7.5L12 3.2Z"/><path d="M12 12.1 19.4 7.5M12 12.1v8.7M12 12.1 4.6 7.5"/></g></symbol>
+<symbol id="i-cam-front" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="5.4" width="17.2" height="13.2" rx="2"/><path d="M3.4 15.2h17.2"/><circle cx="9.4" cy="10.4" r="1.5"/></g></symbol>
+<symbol id="i-cam-top" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3.6 8.4 4.8L12 13.2 3.6 8.4 12 3.6Z"/><path d="M3.6 12.6 12 17.4l8.4-4.8M3.6 16.8 12 21.6l8.4-4.8"/></g></symbol>
+<symbol id="i-cam-side" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 4.4h11v15.2h-11z"/><path d="M6.6 4.4 3.4 6.6v11l3.2 2M17.6 8.2h-11"/></g></symbol>
+<symbol id="i-cam-under" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 7.4c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/><circle cx="12" cy="15.4" r="4.2"/><path d="M12 11.2v-1.6M9.4 15.4h5.2"/></g></symbol>
+<symbol id="i-cam-follow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M21.2 12h-3M5.8 12h-3"/><circle cx="12" cy="12" r="8.4" stroke-dasharray="3 3"/></g></symbol>
+<symbol id="i-rotate" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 12a8.2 8.2 0 1 1-2.6-6"/><path d="M20.4 3.6v4.8h-4.8"/></g></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5.6v12.8M5.6 12h12.8"/></g></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5.6 12h12.8"/></g></symbol>
+<symbol id="i-pour" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.2 4.2h6.4v3.2l2.6 2.6-6.6 6.6-2.4-2.4V4.2Z" transform="rotate(28 10 10)"/><circle cx="17.4" cy="15.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="20.2" cy="19" r="1.1" fill="currentColor" stroke="none"/><circle cx="14.6" cy="20" r="1.1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-refill" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4v10.2M8.4 10l3.6 3.6L15.6 10"/><path d="M4.6 16.2v2.6a1.8 1.8 0 0 0 1.8 1.8h11.2a1.8 1.8 0 0 0 1.8-1.8v-2.6"/></g></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6M18.4 18.4l-1.6-1.6M7.2 7.2 5.6 5.6"/></g></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.4A8.6 8.6 0 0 1 9.6 4a8.6 8.6 0 1 0 10.4 10.4Z"/></g></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.4 9h17.2M3.4 15h17.2M9 3.4v17.2M15 3.4v17.2"/></g></symbol>
+<symbol id="i-dice" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.4"/><circle cx="8.6" cy="8.6" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.4" cy="15.4" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.8 12a8.2 8.2 0 1 0 2.6-6"/><path d="M3.6 3.6v4.8h4.8"/></g></symbol>
+<symbol id="i-shot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.4 8.4h3.2l1.6-2.6h7.6l1.6 2.6h3.2v10.2H3.4V8.4Z"/><circle cx="12" cy="13.2" r="3.4"/></g></symbol>
+<symbol id="i-bowl" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 11.4h17.6c0 4.4-3.9 7.6-8.8 7.6s-8.8-3.2-8.8-7.6Z"/><path d="M8.4 8.2c0-1.6 1.6-1.6 1.6-3.2M12 8.2c0-1.6 1.6-1.6 1.6-3.2M15.6 8.2c0-1.6 1.6-1.6 1.6-3.2"/></g></symbol>
+<symbol id="i-smile" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.2 14.2a4.6 4.6 0 0 0 7.6 0"/><circle cx="9" cy="9.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="9.6" r="1.1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3.4 1.9 5.3 5.3 1.9-5.3 1.9L12 17.8l-1.9-5.3-5.3-1.9 5.3-1.9L12 3.4Z"/><path d="M18.6 16.4 19.4 18.6l2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z"/></g></symbol>
+<symbol id="i-light" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 17.4a6.2 6.2 0 1 1 5.6 0v2.2H9.2v-2.2Z"/><path d="M9.6 21.4h4.8"/></g></symbol>
+<symbol id="i-wave" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2.6 8c2-1.8 3.4-1.8 5.4 0s3.4 1.8 5.4 0 3.4-1.8 5.4 0M2.6 13.4c2-1.8 3.4-1.8 5.4 0s3.4 1.8 5.4 0 3.4-1.8 5.4 0M2.6 18.8c2-1.8 3.4-1.8 5.4 0s3.4 1.8 5.4 0 3.4-1.8 5.4 0"/></g></symbol>
+<symbol id="i-bubble" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="14.4" r="5"/><circle cx="17" cy="7.4" r="3.2"/><circle cx="17.6" cy="16.6" r="1.8"/></g></symbol>
+<symbol id="i-speed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 17.4a9 9 0 1 1 16.8 0"/><path d="m12 12.6 4.4-3.6"/><circle cx="12" cy="13.4" r="1.4" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-glow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.6"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.6 5.4 17 7M7 17l-1.6 1.6M18.6 18.6 17 17M7 7 5.4 5.4"/></g></symbol>
+<symbol id="i-palette" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2a8.8 8.8 0 0 0 0 17.6c1.3 0 1.9-.9 1.9-1.8 0-1.4-1.2-1.7-1.2-2.9 0-.9.7-1.6 1.7-1.6h1.8a4.6 4.6 0 0 0 4.6-4.6c0-3.7-3.9-6.7-8.8-6.7Z"/><circle cx="7.6" cy="11.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="11" cy="7.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.6" cy="9.4" r="1.1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 6.6h14.8M9.4 6.6V4.4h5.2v2.2M6.6 6.6l.9 13a1.6 1.6 0 0 0 1.6 1.5h5.8a1.6 1.6 0 0 0 1.6-1.5l.9-13"/></g></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="3.6"/><path d="M12 1.8v3M12 19.2v3M22.2 12h-3M4.8 12h-3"/></g></symbol>
+<symbol id="i-sponge" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="4.4" y="4.4" width="15.2" height="15.2" rx="2.6"/><circle cx="9" cy="9" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="10.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="11.4" cy="15" r="1.1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 2.8 2.6 6.2 6.6.5-5 4.4 1.5 6.5L12 16.9l-5.7 3.5 1.5-6.5-5-4.4 6.6-.5L12 2.8Z"/></g></symbol>
+<symbol id="i-octo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.4 11a6.6 6.6 0 0 1 13.2 0v3.2H5.4V11Z"/><path d="M6.6 14.2c-.6 2.6-1.6 3-2.4 4.4M10 14.2c-.2 2.8.4 3.6 0 5.4M14 14.2c.2 2.8-.4 3.6 0 5.4M17.4 14.2c.6 2.6 1.6 3 2.4 4.4"/></g></symbol>
+<symbol id="i-horse" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.6c2.4 0 3.6 1.6 3.6 3.4 0 2.6-2.6 3-2.6 5.6 0 2.4 2.4 2.8 2.4 5 0 1.8-1.4 2.8-3 2.8"/><path d="M10 3.6 7.4 5.2M13.6 6.4h3M11.4 12.6h3.4"/></g></symbol>
+<symbol id="i-turtle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 13.4a7.4 5.6 0 0 1 14.8 0Z"/><path d="M19.4 13.4c1.4 0 2.2-.8 2.2-1.8M4.6 13.4 3 16M8.6 13.4l-1 3M15.4 13.4l1 3M19 13.4l1.4 2.6"/><path d="M9.4 8.6 12 13.4l2.6-4.8"/></g></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.4S3.4 15.2 3.4 9.4a4.6 4.6 0 0 1 8.6-2.3 4.6 4.6 0 0 1 8.6 2.3c0 5.8-8.6 11-8.6 11Z"/></g></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 19.6h4l10-10a2.1 2.1 0 0 0-3-3l-10 10v3Z"/><path d="m14.4 6.6 3 3"/></g></symbol>
+</svg>
+
+<div id="app">
+  <canvas id="gl"></canvas>
+  <div id="vignette"></div>
+  <div id="grain"></div>
+  <div id="fxLayer"></div>
+
+  <header id="topbar">
+    <button class="pet-chip" id="petChip" aria-label="查看当前小鱼">
+      <span class="pet-av">
+        <svg class="ring" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="17.5" fill="none" stroke="rgba(4,18,27,.85)" stroke-width="3"/>
+          <circle id="xpRing" cx="20" cy="20" r="17.5" fill="none" stroke="#22e3ff" stroke-width="3" stroke-linecap="round" stroke-dasharray="110" stroke-dashoffset="110"/>
+        </svg>
+        <svg class="glyph" aria-hidden="true"><use href="#i-fish"/></svg>
+      </span>
+      <span class="pet-meta">
+        <span class="pet-name" id="petName">小蓝</span>
+        <span class="pet-sub" id="petSub">LV.1 · DAY 1</span>
+      </span>
+    </button>
+    <div class="clock-chip" id="clockChip"><svg aria-hidden="true"><use href="#i-sun" id="clockIcon"/></svg><span id="clockText">06:00 清晨</span></div>
+    <div class="top-spacer"></div>
+    <button class="icon-btn" id="btnSound" aria-label="声音开关"><svg aria-hidden="true"><use href="#i-sound" id="soundIcon"/></svg></button>
+    <button class="icon-btn" id="btnHelp" aria-label="玩法说明"><svg aria-hidden="true"><use href="#i-help"/></svg></button>
+    <button class="icon-btn" id="btnSettings" aria-label="设置"><svg aria-hidden="true"><use href="#i-gear"/></svg></button>
+  </header>
+
+  <section id="stats" aria-label="小鱼状态">
+    <div class="gauge" data-k="sat"><svg aria-hidden="true"><use href="#i-bowl"/></svg><span class="g-track"><i class="g-fill" id="fillSat"></i></span><span class="g-val" id="valSat">80</span></div>
+    <div class="gauge" data-k="mood"><svg aria-hidden="true"><use href="#i-smile"/></svg><span class="g-track"><i class="g-fill" id="fillMood"></i></span><span class="g-val" id="valMood">80</span></div>
+    <div class="gauge" data-k="clean"><svg aria-hidden="true"><use href="#i-sparkle"/></svg><span class="g-track"><i class="g-fill" id="fillClean"></i></span><span class="g-val" id="valClean">100</span></div>
+  </section>
+
+  <aside id="camRail" aria-label="视角控制">
+    <button class="cam-btn on" data-cam="free"><svg aria-hidden="true"><use href="#i-cam-free"/></svg><span class="tip">自由环绕</span></button>
+    <button class="cam-btn" data-cam="front"><svg aria-hidden="true"><use href="#i-cam-front"/></svg><span class="tip">正面全景</span></button>
+    <button class="cam-btn" data-cam="top"><svg aria-hidden="true"><use href="#i-cam-top"/></svg><span class="tip">俯瞰水面</span></button>
+    <button class="cam-btn" data-cam="side"><svg aria-hidden="true"><use href="#i-cam-side"/></svg><span class="tip">侧面剖面</span></button>
+    <button class="cam-btn" data-cam="under"><svg aria-hidden="true"><use href="#i-cam-under"/></svg><span class="tip">水下潜视</span></button>
+    <button class="cam-btn" data-cam="follow"><svg aria-hidden="true"><use href="#i-cam-follow"/></svg><span class="tip">跟随小鱼</span></button>
+    <span class="rail-sep"></span>
+    <button class="cam-btn" id="btnAutoRot"><svg aria-hidden="true"><use href="#i-rotate"/></svg><span class="tip">自动环绕</span></button>
+    <span class="rail-sep"></span>
+    <div class="zoom-wrap">
+      <svg aria-hidden="true"><use href="#i-plus"/></svg>
+      <input id="zoomSlider" type="range" min="0" max="100" value="46" aria-label="镜头距离">
+      <svg aria-hidden="true"><use href="#i-minus"/></svg>
+    </div>
+  </aside>
+
+  <div id="bottleHud">
+    <svg class="b-icon" aria-hidden="true"><use href="#i-feed"/></svg>
+    <span class="b-meta"><span class="b-count"><b id="bottleCount">60</b>/60</span><span class="b-label">FEED STOCK</span></span>
+    <span class="b-bar"><i id="bottleBar"></i></span>
+    <button class="pour-btn" id="btnPour"><svg aria-hidden="true"><use href="#i-pour"/></svg>倾倒</button>
+    <button class="mini-btn" id="btnRefill" aria-label="补满饲料"><svg aria-hidden="true"><use href="#i-refill"/></svg></button>
+  </div>
+
+  <section id="console" aria-label="实时场景调节">
+    <div class="ctl" id="ctlTilt">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-pour"/></svg>倾倒角 <b id="vTilt">0°</b></span>
+      <span class="c-body"><input class="slim amber" id="sTilt" type="range" min="0" max="170" value="0"></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-light"/></svg>光照 <b id="vLight">100</b></span>
+      <span class="c-body"><input class="slim" id="sLight" type="range" min="20" max="200" value="100"></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-wave"/></svg>波纹 <b id="vWave">60</b></span>
+      <span class="c-body"><input class="slim" id="sWave" type="range" min="0" max="100" value="60"></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-bubble"/></svg>气泡 <b id="vBub">55</b></span>
+      <span class="c-body"><input class="slim lime" id="sBub" type="range" min="0" max="100" value="55"></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-speed"/></svg>游速 <b id="vSpeed">100</b></span>
+      <span class="c-body"><input class="slim magenta" id="sSpeed" type="range" min="30" max="220" value="100"></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-glow"/></svg>辉光 <b id="vGlow">70</b></span>
+      <span class="c-body"><input class="slim" id="sGlow" type="range" min="0" max="150" value="70"></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-fish"/></svg>鱼群</span>
+      <span class="c-body stepper"><button id="fishMinus" aria-label="减少一条">−</button><b id="vFish">3</b><button id="fishPlus" aria-label="增加一条">+</button></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-palette"/></svg>水色</span>
+      <span class="c-body"><input class="swatch" id="cWater" type="color" value="#12657f" aria-label="水体颜色"></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-moon"/></svg>昼夜</span>
+      <span class="c-body"><button class="tgl on violet" id="tCycle" role="switch" aria-checked="true" aria-label="昼夜循环"><i></i></button></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-grid"/></svg>网格</span>
+      <span class="c-body"><button class="tgl" id="tGrid" role="switch" aria-checked="false" aria-label="参考网格"><i></i></button></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head"><svg aria-hidden="true"><use href="#i-sparkle"/></svg>想法</span>
+      <span class="c-body"><button class="tgl on lime" id="tThought" role="switch" aria-checked="true" aria-label="思考气泡"><i></i></button></span>
+    </div>
+    <div class="ctl">
+      <span class="c-head">画质</span>
+      <span class="c-body seg" id="segQuality"><button data-q="low">低</button><button data-q="mid" class="on">中</button><button data-q="high">高</button></span>
+    </div>
+    <button class="act-chip violet" id="btnRandom"><svg aria-hidden="true"><use href="#i-dice"/></svg>随机布景</button>
+    <button class="act-chip" id="btnShot"><svg aria-hidden="true"><use href="#i-shot"/></svg>截图</button>
+    <button class="act-chip danger" id="btnResetScene"><svg aria-hidden="true"><use href="#i-reset"/></svg>复位</button>
+  </section>
+
+  <nav id="dock" aria-label="主要动作">
+    <button class="dock-btn feed" id="btnFeed"><svg aria-hidden="true"><use href="#i-feed"/></svg><span>喂食</span><small>FEED</small><i class="cool"></i></button>
+    <button class="dock-btn play" id="btnPlay"><svg aria-hidden="true"><use href="#i-play"/></svg><span>玩耍</span><small>PLAY</small><i class="cool"></i></button>
+    <button class="dock-btn clean" id="btnClean"><svg aria-hidden="true"><use href="#i-clean"/></svg><span>清洁</span><small>CLEAN</small><i class="cool"></i><em class="badge" id="poopBadge" hidden>0</em></button>
+    <button class="dock-btn fish" id="btnFish"><svg aria-hidden="true"><use href="#i-fish"/></svg><span>鱼群</span><small>TANK</small><i class="cool"></i></button>
+    <button class="dock-btn guest" id="btnGuest"><svg aria-hidden="true"><use href="#i-guest"/></svg><span>访客</span><small>GUEST</small><i class="cool"></i></button>
+  </nav>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="banner"><div class="b-t" id="bannerT"></div><div class="b-s" id="bannerS"></div></div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <section class="sheet" id="sheetSettings" aria-label="设置">
+    <div class="sheet-head"><span class="grab"></span><h2>控制台设置</h2><span class="sub">SYSTEM</span><button class="icon-btn" data-close aria-label="关闭"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="row"><span class="r-ico"><svg aria-hidden="true"><use href="#i-sound"/></svg></span><span class="r-txt"><b>音量</b><small>投喂、水花、升级等交互音效</small></span><input class="slim" id="sVolume" type="range" min="0" max="100" value="70"></div>
+      <div class="row"><span class="r-ico"><svg aria-hidden="true"><use href="#i-target"/></svg></span><span class="r-txt"><b>镜头灵敏度</b><small>拖动旋转的响应速度</small></span><input class="slim" id="sSens" type="range" min="30" max="200" value="100"></div>
+      <div class="row"><span class="r-ico"><svg aria-hidden="true"><use href="#i-moon"/></svg></span><span class="r-txt"><b>昼夜时长</b><small>一整天的现实分钟数</small></span><input class="slim" id="sDayLen" type="range" min="1" max="20" value="6"></div>
+      <div class="row"><span class="r-ico"><svg aria-hidden="true"><use href="#i-heart"/></svg></span><span class="r-txt"><b>触感反馈</b><small>支持振动的设备上生效</small></span><button class="tgl on" id="tHaptic" role="switch" aria-checked="true"><i></i></button></div>
+      <div class="row"><span class="r-ico"><svg aria-hidden="true"><use href="#i-fish"/></svg></span><span class="r-txt"><b>名字标签</b><small>在小鱼头顶显示名字</small></span><button class="tgl" id="tTags" role="switch" aria-checked="false"><i></i></button></div>
+      <div class="row"><span class="r-ico"><svg aria-hidden="true"><use href="#i-glow"/></svg></span><span class="r-txt"><b>光柱与焦散</b><small>体积光与沙底水波光斑</small></span><button class="tgl on lime" id="tRays" role="switch" aria-checked="true"><i></i></button></div>
+      <div style="height:6px"></div>
+      <button class="btn-wide ghost" id="btnInstall" style="margin-bottom:9px">添加到主屏幕 / 安装说明</button>
+      <button class="btn-wide danger" id="btnReset">重新养一缸鱼</button>
+      <p style="font-size:10.5px;color:#5d7d8e;line-height:1.8;margin:12px 2px 0">进度自动保存在本机。离开一段时间后小鱼会肚子饿、水会变脏——回来记得照顾它们。</p>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheetGuests" aria-label="邀请访客">
+    <div class="sheet-head"><span class="grab"></span><h2>邀请谁来做客</h2><span class="sub" id="guestSlots">0 / 3</span><button class="icon-btn" data-close aria-label="关闭"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="grid3" id="guestGrid"></div>
+      <div style="height:12px"></div>
+      <button class="btn-wide" id="btnGuestRandom">随机邀请一位</button>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheetFish" aria-label="鱼群管理">
+    <div class="sheet-head"><span class="grab"></span><h2>我的鱼群</h2><span class="sub" id="fishSlots">0 / 12</span><button class="icon-btn" data-close aria-label="关闭"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="grid3" id="fishGrid"></div>
+      <div style="height:12px"></div>
+      <div class="grid2">
+        <button class="btn-wide" id="btnAddFish">＋ 添加小鱼</button>
+        <button class="btn-wide ghost" id="btnSchool">＋ 一群灯鱼</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheetDetail" aria-label="小鱼详情">
+    <div class="sheet-head"><span class="grab"></span><h2>小鱼档案</h2><span class="sub">PROFILE</span><button class="icon-btn" data-close aria-label="关闭"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="fish-hero" id="fhHero">
+        <span class="fh-orb"><svg aria-hidden="true"><use href="#i-fish"/></svg></span>
+        <span class="fh-meta"><input class="name-in" id="fhName" maxlength="8" aria-label="小鱼名字"><span class="fh-sp" id="fhSpecies"></span></span>
+      </div>
+      <div class="kv">
+        <div><small>年龄 AGE</small><b id="fhAge">—</b></div>
+        <div><small>体长 SIZE</small><b id="fhSize">—</b></div>
+        <div><small>进食 EATEN</small><b id="fhEaten">—</b></div>
+        <div><small>性格 TRAITS</small><b id="fhTrait" style="font-size:12px">—</b></div>
+      </div>
+      <div class="grid2" style="margin-bottom:9px">
+        <button class="btn-wide amber" id="fhFocus">镜头跟随</button>
+        <button class="btn-wide ghost" id="fhFeed">投喂它</button>
+      </div>
+      <button class="btn-wide danger" id="fhRelease">送它去大海</button>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheetHelp" aria-label="玩法说明">
+    <div class="sheet-head"><span class="grab"></span><h2>怎么玩</h2><span class="sub">GUIDE</span><button class="icon-btn" data-close aria-label="关闭"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="help-list">
+        <div class="help-item"><span class="n">1</span><p><b>转动视角</b>：单指拖动环绕鱼缸，双指捏合缩放。右侧竖排按钮可一键切换 <b>正面 / 俯瞰 / 侧面 / 水下 / 跟随</b> 六种机位，切换是平滑运镜。</p></div>
+        <div class="help-item"><span class="n">2</span><p><b>饲料瓶</b>：点一下缸上方的饲料瓶把它拿起来，拖动到想投喂的位置，然后按住左下角 <b>倾倒</b> 按钮——瓶身会真的倾斜，里面的颗粒会滚向瓶口洒出来。也可以直接拖底部控制台的 <b>倾倒角</b> 滑杆。</p></div>
+        <div class="help-item"><span class="n">3</span><p><b>喂食</b>：颗粒入水后会缓慢下沉，小鱼发现后加速追食。沉底的饲料由螃蟹打扫。吃太多会拉便便，水质会下降。</p></div>
+        <div class="help-item"><span class="n">4</span><p><b>玩耍 / 清洁</b>：玩耍让鱼群冲刺并摆出编队；清洁换掉脏水、清走便便。三项状态都会随时间下降。</p></div>
+        <div class="help-item"><span class="n">5</span><p><b>点小鱼</b>：轻点任意一条鱼可以打开它的档案，改名、跟随、单独投喂。双击画面可对焦到最近的鱼。</p></div>
+        <div class="help-item"><span class="n">6</span><p><b>底部控制台</b>：光照、波纹、气泡、游速、辉光、水色、昼夜、网格、画质全部即时生效，左右滑动查看更多。</p></div>
+        <div class="help-item"><span class="n">7</span><p><b>键盘</b>（桌面）：<kbd>F</kbd> 喂食 · <kbd>P</kbd> 玩耍 · <kbd>C</kbd> 清洁 · <kbd>1</kbd>–<kbd>6</kbd> 机位 · <kbd>R</kbd> 自动环绕 · <kbd>空格</kbd> 倾倒。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheetInstall" aria-label="安装到 iPhone">
+    <div class="sheet-head"><span class="grab"></span><h2>装到 iPhone 上</h2><span class="sub">INSTALL</span><button class="icon-btn" data-close aria-label="关闭"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="help-list">
+        <div class="help-item"><span class="n">A</span><p><b>立刻可用（推荐）</b>：用 iPhone 的 <b>Safari</b> 打开本页面 → 点底部 <b>分享</b> 按钮 → 选 <b>添加到主屏幕</b>。桌面会出现独立图标，点开即全屏运行、离线可玩，和原生 App 体验一致。</p></div>
+        <div class="help-item"><span class="n">B</span><p><b>原生 IPA</b>：项目已附带 Capacitor iOS 工程。在任意一台 Mac 上执行 <kbd>npm install</kbd> → <kbd>npx cap sync ios</kbd> → <kbd>npx cap open ios</kbd>，在 Xcode 里选择你的开发者签名后 <b>Product ▸ Archive</b> 即可导出 .ipa 并安装到 iPhone。</p></div>
+        <div class="help-item"><span class="n">C</span><p><b>为什么需要 Mac</b>：Apple 规定 iOS 安装包必须用 Xcode 签名，这一步只能在 macOS 上完成。方式 A 不需要 Mac，现在就能装；没有 Mac 又想要 .ipa，可用 GitHub Actions 云编译（教程方法二）。</p></div>
+      </div>
+      <a class="btn-wide" href="guide.html" style="display:flex;justify-content:center;align-items:center;margin-top:14px;text-decoration:none">打开完整安装教程</a>
+    </div>
+  </section>
+
+  <div id="boot">
+    <div class="boot-logo"><span class="halo"></span><img src="icons/icon-1024.png" alt="CYBER AQUA"></div>
+    <h1>CYBER AQUA</h1>
+    <p class="tag">DEEP SEA PET MACHINE</p>
+    <div class="boot-bar"><i id="bootBar"></i></div>
+    <div id="bootMsg">正在注入海水…</div>
+    <button id="bootStart">轻触进入鱼缸</button>
+  </div>
+</div>
+
+<noscript><div style="position:fixed;inset:0;display:grid;place-items:center;background:#030d15;color:#eaf7ff;font-family:sans-serif;padding:30px;text-align:center;line-height:2">本应用需要启用 JavaScript 才能运行 3D 鱼缸。</div></noscript>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
