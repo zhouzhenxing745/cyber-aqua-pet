@@ -1,5 +1,5 @@
 /* CYBER AQUA service worker — offline-first app shell */
-const VERSION = 'cyber-aqua-v3';
+const VERSION = 'cyber-aqua-v4';
 const SHELL = [
   './',
   './index.html',
@@ -48,9 +48,10 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
+  /* no-cache: Pages 的 max-age=600 会让 HTTP 缓存喂回旧文件，必须强制 revalidate */
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req).then((res) => {
+      fetch(req, { cache: 'no-cache' }).then((res) => {
         const copy = res.clone();
         caches.open(VERSION).then((c) => c.put(req, copy)).catch(() => {});
         return res;
@@ -61,7 +62,7 @@ self.addEventListener('fetch', (e) => {
 
   /* network-first so updates land immediately; cache is the offline fallback */
   e.respondWith(
-    fetch(req).then((res) => {
+    fetch(req, { cache: 'no-cache' }).then((res) => {
       if (res && res.status === 200 && res.type === 'basic') {
         const copy = res.clone();
         caches.open(VERSION).then((c) => c.put(req, copy)).catch(() => {});
