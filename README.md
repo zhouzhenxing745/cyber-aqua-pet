@@ -19,6 +19,7 @@ capacitor.config.json iOS 原生壳配置（webDir = www）
 tools/build-ios.sh    macOS 一键生成 .ipa
 tools/pngresize.py    图标尺寸生成脚本
 .github/workflows/ios-build.yml   无 Mac 云编译 IPA（GitHub Actions）
+.github/workflows/pages.yml       push 到 main 自动部署 www/ 到 GitHub Pages（永久 https 网址）
 ```
 
 ## 本地运行
