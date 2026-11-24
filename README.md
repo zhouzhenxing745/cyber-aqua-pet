@@ -85,7 +85,7 @@ npm run ios:build      # = bash tools/build-ios.sh
 - 暗色礁石材质过黑 + 尖刺几何，在亮沙底上读作"黑洞" → 提亮材质并改为平滑卵石几何。
 - 派大星下半身埋入沙中、花短裤被星形身体包裹 → 抬高站位并加宽短裤厚度；章鱼哥鼻子下垂角度修正。
 - 自动喂食倾倒窗口过短（1.5s），颗粒来不及流到瓶口 → 延长至 2.8s，实测 60→29 粒、鱼进食饱食度上升。
-- Service Worker 旧版 stale-while-revalidate 导致更新后仍跑旧代码 → 改为 network-first + 离线回退；navigate 缓存误写 index.html 的问题一并修正，版本升至 v3，`guide.html` 纳入离线预缓存。
+- Service Worker 旧版 stale-while-revalidate 导致更新后仍跑旧代码 → 改为 network-first + 离线回退；navigate 缓存误写 index.html 的问题一并修正；GitHub Pages 的 `max-age=600` 会让 HTTP 缓存喂回旧文件 → fetch 强制 `no-cache` revalidate，版本升至 v4，`guide.html` 纳入离线预缓存。
 - 桌面 1101×1153 与移动 390×844 实测：无重叠、无出屏、控制台横向滚动可触及全部控件；重复投喂 / 补满 / 缩放 / 画质切换 / 复位重启均稳定，控制台无报错。
 
 ## 已知限制
