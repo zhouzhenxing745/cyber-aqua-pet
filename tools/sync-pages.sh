@@ -12,5 +12,10 @@ export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 TREE=$(git rev-parse HEAD:www)
 MSG="pages: 同步 www 快照 $(date +%Y-%m-%d_%H:%M)"
 C=$(git commit-tree "$TREE" -m "$MSG")
-git push origin "$C":refs/heads/pages
+GH=$(command -v gh || true)
+if [ -n "$GH" ]; then
+  git -c credential.helper="!\"$GH\" auth git-credential" push origin "$C":refs/heads/pages
+else
+  git push origin "$C":refs/heads/pages
+fi
 echo "已推送 pages 分支，Pages 约 1 分钟内更新：https://zhouzhenxing745.github.io/cyber-aqua-pet/"
